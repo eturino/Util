@@ -6,6 +6,17 @@
  */
 class EtuDev_Util_Date {
 
+	/**
+	 * Get the current datetime string
+	 *
+	 * @param string $now
+	 *
+	 * @return string
+	 */
+	static public function getDateTimeNowNoOffsetString($now = 'Y-m-d H:i:s') {
+		return date($now, time());
+	}
+
 	static public function isZeroDate($date_string) {
 		return (!$date_string || $date_string == '0000-00-00' || $date_string == '0000-00-00 00:00:00');
 	}
