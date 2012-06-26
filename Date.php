@@ -88,7 +88,7 @@ class EtuDev_Util_Date {
 	 * @return DateTime
 	 */
 	static public function getDateTimeToday($with_time = false, DateTimeZone $timezone = null) {
-		$d = new DateTime('now', $timezone ?: static::getDateTimeZone());
+		$d = new DateTime('now', $timezone ? : static::getDateTimeZone());
 		if (!$with_time) {
 			$d->setTime(0, 0, 0);
 		}
@@ -98,20 +98,22 @@ class EtuDev_Util_Date {
 
 	/**
 	 * @static
+	 *
 	 * @param string|DateTimeZone $tz the actual TimeZone, or a TimeZone description to use in the DateTimeZone constructor, if there is none, use UTC
+	 *
 	 * @return DateTimeZone
 	 */
-	static public function getDateTimeZone($tz = null){
-		if($tz instanceof DateTimeZone){
+	static public function getDateTimeZone($tz = null) {
+		if ($tz instanceof DateTimeZone) {
 			return $tz;
 		}
 
-		if(!is_string($tz) && $tz['timezone']){
+		if (!is_string($tz) && $tz['timezone']) {
 			$tz = $tz['timezone'];
 		}
 
-		if(!$tz || !is_string($tz)){
-			$tz = EtuDev_Zend_Util_App::getZFConfig('timezone') ?: 'UTC';
+		if (!$tz || !is_string($tz)) {
+			$tz = EtuDev_Zend_Util_App::getZFConfig('timezone') ? : 'UTC';
 		}
 
 		return new DateTimeZone($tz);
@@ -134,28 +136,30 @@ class EtuDev_Util_Date {
 
 	/**
 	 * @static
-	 * @param string $date Date in Y-m-d format
-	 * @param string $time Time in H:i format, without seconds
+	 *
+	 * @param string                   $date Date in Y-m-d format
+	 * @param string                   $time Time in H:i format, without seconds
 	 * @param string|DateTimeZone|null $timezone the timezone to use (the actual object or its descriptor), if void uses the default one, given by getDateTimeZone()
+	 *
 	 * @return DateTime|null
 	 * @uses getDateTimeZone()
 	 *
 	 */
-	static public function createDateTimeWithDateAndTime($date, $time, $timezone = null){
-		if(is_string($date)){ //quitamos las horas en caso de que por error se pasen como 0s
+	static public function createDateTimeWithDateAndTime($date, $time, $timezone = null) {
+		if (is_string($date)) { //quitamos las horas en caso de que por error se pasen como 0s
 			$y = preg_match('/\d{4}-\d{2}-\d{2}/', $date, $matches);
-			if($y){
+			if ($y) {
 				$date = $matches[0];
 			}
 		}
 
-		try{
-			return DateTime::createFromFormat('Y-m-d H:i', trim($date). ' ' . trim($time), self::getDateTimeZone($timezone)) ?: null;
-		}catch(Exception $e){
+		try {
+			return DateTime::createFromFormat('Y-m-d H:i', trim($date) . ' ' . trim($time), self::getDateTimeZone($timezone)) ? : null;
+		} catch (Exception $e) {
 			//try with seconds
-			try{
-				return DateTime::createFromFormat('Y-m-d H:i:s', trim($date) . ' ' . trim($time), self::getDateTimeZone($timezone)) ?: null;
-			}catch(Exception $e){
+			try {
+				return DateTime::createFromFormat('Y-m-d H:i:s', trim($date) . ' ' . trim($time), self::getDateTimeZone($timezone)) ? : null;
+			} catch (Exception $e) {
 				//assume the time is in an incorrect format
 				return null;
 			}
@@ -206,4 +210,56 @@ class EtuDev_Util_Date {
 		return null;
 	}
 
+
+	/**
+	 * Format a date from the database making it ready for use in input fields (matches input format)
+	 *
+	 * @param string $date_string Date string to format
+	 *
+	 * @return string Formatted date
+	 */
+	static public function formatDateOutput($date_string) {
+		if (trim($date_string) == '') {
+			return '';
+		}
+		// If we have a zero date, properly replace its values since strtotime will fail on this
+		if (static::isZeroDate($date_string)) {
+			return str_replace(array(' ', 'm', 'd', 'Y'), array(static::DATE_FORMAT_INPUT_SEPARATOR, '00', '00', '0000'), static::DATE_FORMAT_INPUT);
+		} else {
+			return date(str_replace('-', static::DATE_FORMAT_INPUT_SEPARATOR, static::DATE_FORMAT_INPUT), strtotime($date_string));
+		}
+	}
+
+	/**
+	 * Format a date from input fields so its ready to go into the DB.
+	 *
+	 * @param $date_string
+	 *
+	 * @return string
+	 */
+	static public function formatDateInput($date_string) {
+		if (preg_match('/[0-9]{4}-[0-9]{2}-[0-9]{2}/', $date_string)) {
+			return $date_string;
+		}
+
+		// Split the date by anything non numerical
+		$date_string_parts = preg_split('/[^0-9]{1}/', $date_string, 3);
+
+		// If we have a zero in any part date return the 000-00-00 date/time
+		if (in_array($date_string_parts[0], array('0', '00', '0000')) OR $date_string == '') {
+			return '0000-00-00 00:00:00';
+		}
+
+		$date_array = array();
+		// Match the pieces to the day, month, and year parts
+		foreach (explode('-', static::DATE_FORMAT_INPUT) as $key => $date_part) {
+			$date_array[$date_part] = $date_string_parts[$key];
+		}
+		// Return a MySQL date/time compatible string
+		return date('Y-m-d H:i:s', mktime(0, 0, 0, $date_array['m'], $date_array['d'], $date_array['Y']));
+	}
+
+	const DATE_FORMAT_INPUT           = 'd-m-Y';
+	const DATE_FORMAT                 = '%d/%m/%Y';
+	const DATE_FORMAT_INPUT_SEPARATOR = '/';
 }

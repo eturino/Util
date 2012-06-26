@@ -693,4 +693,13 @@ class EtuDev_Util_String {
 	}
 
 
+
+	static public function cleanFormOutput($mixed) {
+		if (is_array($mixed)) {
+			return array_map(array(__CLASS__, __FUNCTION__), $mixed);
+		} else {
+			// Supress errors since some charsets not supported
+			return str_replace('&amp;', '&', @htmlspecialchars($mixed, ENT_QUOTES));
+		}
+	}
 }
