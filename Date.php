@@ -262,10 +262,10 @@ class EtuDev_Util_Date {
 	const FORMAT_ES = 'es';
 	const FORMAT_EN = 'en';
 
-	static protected $format_type = static::FORMAT_EN;
+	static protected $format_type = self::FORMAT_EN;
 
-	static protected $formats = array(static::FORMAT_ES => array('format' => '%d/%m/%Y', 'input' => 'd-m-Y', 'separator' => '/'),
-									  static::FORMAT_EN => array('format' => '%m/%d/%Y', 'input' => 'm-d-Y', 'separator' => '/'),);
+	static protected $formats = array(self::FORMAT_ES => array('format' => '%d/%m/%Y', 'input' => 'd-m-Y', 'separator' => '/'),
+									  self::FORMAT_EN => array('format' => '%m/%d/%Y', 'input' => 'm-d-Y', 'separator' => '/'),);
 
 	static protected $dateFormat = '%m/%d/%Y';
 	static protected $dateFormatInput = 'm-d-Y';
