@@ -224,9 +224,9 @@ class EtuDev_Util_Date {
 		}
 		// If we have a zero date, properly replace its values since strtotime will fail on this
 		if (static::isZeroDate($date_string)) {
-			return str_replace(array(' ', 'm', 'd', 'Y'), array(static::DATE_FORMAT_INPUT_SEPARATOR, '00', '00', '0000'), static::DATE_FORMAT_INPUT);
+			return str_replace(array(' ', 'm', 'd', 'Y'), array(static::getFormatInputSeparator(), '00', '00', '0000'), static::getFormatInput());
 		} else {
-			return date(str_replace('-', static::DATE_FORMAT_INPUT_SEPARATOR, static::DATE_FORMAT_INPUT), strtotime($date_string));
+			return date(str_replace('-', static::getFormatInputSeparator(), static::getFormatInput()), strtotime($date_string));
 		}
 	}
 
@@ -252,14 +252,44 @@ class EtuDev_Util_Date {
 
 		$date_array = array();
 		// Match the pieces to the day, month, and year parts
-		foreach (explode('-', static::DATE_FORMAT_INPUT) as $key => $date_part) {
+		foreach (explode('-', static::getFormatInput()) as $key => $date_part) {
 			$date_array[$date_part] = $date_string_parts[$key];
 		}
 		// Return a MySQL date/time compatible string
 		return date('Y-m-d H:i:s', mktime(0, 0, 0, $date_array['m'], $date_array['d'], $date_array['Y']));
 	}
 
-	const DATE_FORMAT_INPUT           = 'd-m-Y';
-	const DATE_FORMAT                 = '%d/%m/%Y';
-	const DATE_FORMAT_INPUT_SEPARATOR = '/';
+	const FORMAT_ES = 'es';
+	const FORMAT_EN = 'en';
+
+	static protected $format_type = static::FORMAT_EN;
+
+	static protected $formats = array(static::FORMAT_ES => array('format' => '%d/%m/%Y', 'input' => 'd-m-Y', 'separator' => '/'),
+									  static::FORMAT_EN => array('format' => '%m/%d/%Y', 'input' => 'm-d-Y', 'separator' => '/'),);
+
+	static protected $dateFormat = '%m/%d/%Y';
+	static protected $dateFormatInput = 'm-d-Y';
+	static protected $dateFormatInputSeparator = '/';
+
+
+	static public function changeFormat($format) {
+		if (array_key_exists($format, static::$formats)) {
+			static::$format_type = $format;
+		}
+
+		return static::$format_type;
+	}
+
+	static public function getFormatInput() {
+		return static::$formats[static::$format_type]['input'];
+	}
+
+	static public function getFormat() {
+		return static::$formats[static::$format_type]['format'];
+	}
+
+	static public function getFormatInputSeparator() {
+		return static::$formats[static::$format_type]['separator'];
+	}
+
 }
