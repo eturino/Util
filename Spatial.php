@@ -14,6 +14,10 @@ class EtuDev_Util_Spatial {
 	 * @return float
 	 */
 	static protected function getDistanceBetweenPointsNew($latitude1, $longitude1, $latitude2, $longitude2, $km = true) {
+		if($latitude1 == $latitude2 && $longitude1 == $longitude2){
+			return 0.0;
+		}
+
 		$theta    = $longitude1 - $longitude2;
 		$thetarad = deg2rad($theta);
 
