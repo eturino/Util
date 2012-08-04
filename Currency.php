@@ -16,6 +16,21 @@ class EtuDev_Util_Currency {
 	protected $seconds_ttl = 3600;
 
 	/**
+	 * @var array
+	 */
+	protected $currencies = array();
+
+	/**
+	 * @var array
+	 */
+	protected $rates = array();
+
+	/**
+	 * @var int
+	 */
+	protected $timestamp = null;
+
+	/**
 	 * @param string $api_key
 	 * @param int    $seconds_ttl
 	 */
@@ -92,12 +107,6 @@ class EtuDev_Util_Currency {
 		return $this;
 	}
 
-	protected $currencies = array();
-
-	protected $rates = array();
-
-	protected $timestamp = null;
-
 	protected function loadCurrencies() {
 		$this->currencies = (array) $this->doRequest('currencies.json');
 	}
@@ -121,5 +130,41 @@ class EtuDev_Util_Currency {
 
 		return json_decode($json);
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getApiKey() {
+		return $this->api_key;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getCurrencies() {
+		return $this->currencies;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getRates() {
+		return $this->rates;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getSecondsTtl() {
+		return $this->seconds_ttl;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getTimestamp() {
+		return $this->timestamp;
+	}
+
 
 }
