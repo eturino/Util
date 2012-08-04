@@ -37,7 +37,7 @@ class EtuDev_Util_Currency {
 	 * @return EtuDev_Util_Currency
 	 */
 	public function retrieveCurrenciesIfNotSet() {
-		if ($this->currencies) {
+		if (!$this->currencies) {
 			$this->loadCurrencies();
 		}
 
@@ -99,14 +99,14 @@ class EtuDev_Util_Currency {
 	protected $timestamp = null;
 
 	protected function loadCurrencies() {
-		$this->currencies = $this->doRequest('currencies.json');
+		$this->currencies = (array) $this->doRequest('currencies.json');
 	}
 
 	protected function load() {
 		$changes = $this->doRequest('latest.json');
 		if ($changes) {
-			$this->rates     = $changes->rates;
-			$this->timestamp = $changes->timestamp;
+			$this->rates     = (array) $changes->rates;
+			$this->timestamp = (int) $changes->timestamp;
 		}
 	}
 
