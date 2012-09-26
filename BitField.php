@@ -13,7 +13,7 @@ class EtuDev_Util_BitField {
 	}
 
 	public function load($value = null) {
-		$this->value = is_numeric($value) ? $value : static::DEFAULT_VALUE;
+		$this->value = (int) (is_numeric($value) ? $value : static::DEFAULT_VALUE);
 	}
 
 	public function getValue() {
@@ -30,5 +30,9 @@ class EtuDev_Util_BitField {
 
 	public function clear($n) {
 		$this->set($n, false);
+	}
+
+	public function applyMask($mask) {
+		$this->value = $this->value & (int) $mask;
 	}
 }
