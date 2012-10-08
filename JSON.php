@@ -14,9 +14,17 @@ class EtuDev_Util_JSON {
 	 */
 	static public function encodetoHTMLAttribute($text) {
 		try {
-			return json_encode($text, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+			return static::jsonenc($text);
 		} catch (Exception $ex) {
 			return null;
+		}
+	}
+
+	static protected function jsonenc($text) {
+		if (defined('JSON_UNESCAPED_UNICODE')) {
+			return json_encode($text, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+		} else {
+			return json_encode($text, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
 		}
 	}
 
@@ -32,7 +40,7 @@ class EtuDev_Util_JSON {
 	 */
 	static public function encodetoHTMLAttributeString($text) {
 		try {
-			return json_encode((string) $text, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+			return static::jsonenc((string) $text);
 		} catch (Exception $ex) {
 			return null;
 		}
