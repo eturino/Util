@@ -69,11 +69,10 @@ class EtuDev_Util_URL {
 		}
 		$url_parts = parse_url($url);
 
-		$queryParts = array();
-		parse_str($url_parts['query'], $queryParts);
-
-		if ($queryParts) {
-			$queryParts = array_merge($queryParts, $queryParamsToMerge);
+		if (@$url_parts['query']) {
+			$oldQP = array();
+			parse_str($url_parts['query'], $oldQP);
+			$queryParts = array_merge($oldQP, $queryParamsToMerge);
 		} else {
 			$queryParts = $queryParamsToMerge;
 		}
