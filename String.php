@@ -468,32 +468,66 @@ class EtuDev_Util_String {
 		return $string;
 	}
 
-	static public function normal($p) {
-		$ts = array("/[À-Å]/",
-					"/Æ/",
-					"/Ç/",
-					"/[È-Ë]/",
-					"/[Ì-Ï]/",
-					"/Ð/",
-					"/Ñ/",
-					"/[Ò-ÖØ]/",
-					"/×/",
-					"/[Ù-Ü]/",
-					"/[Ý-ß]/",
-					"/[à-å]/",
-					"/æ/",
-					"/ç/",
-					"/[è-ë]/",
-					"/[ì-ï]/",
-					"/ð/",
-					"/ñ/",
-					"/[ò-öø]/",
-					"/÷/",
-					"/[ù-ü]/",
-					"/[ý-ÿ]/");
-		$tn = array("A", "AE", "C", "E", "I", "D", "N", "O", "X", "U", "Y", "a", "ae", "c", "e", "i", "d", "n", "o", "x", "u", "y");
+	static public function normal($string, $acceptGSMValidNotAccents = false) {
+		$ts = array("[À-Å]",
+					"[È-Ë]",
+					"[Ì-Ï]",
+					"[Ò-Ö]",
+					"[Ù-Ü]",
+					"[Ý-Þ]",
+					"[à-å]",
+					"[è-ë]",
+					"[ì-ï]",
+					"ð",
+					"[ò-ö]",
+					"÷",
+					"·",
+					"[ù-ü]",
+					"[ý-ÿ]");
 
-		return preg_replace($ts, $tn, $p);
+		$tn = array("A", "E", "I", "O", "U", "Y", "a", "e", "i", "d", "o", "/", ".", "u", "y");
+
+		if(!$acceptGSMValidNotAccents){
+			$ts[] = "Æ";
+			$tn[] = 'AE';
+
+			$ts[] = "ß";
+			$tn[] = 'ss';
+
+			$ts[] = "Ç";
+			$tn[] = 'C';
+
+			$ts[] = "Ð";
+			$tn[] = 'D';
+
+			$ts[] = "Ñ";
+			$tn[] = 'N';
+
+			$ts[] = "Ø";
+			$tn[] = 'O';
+
+			$ts[] = "×";
+			$tn[] = 'x';
+
+			$ts[] = "æ";
+			$tn[] = 'ae';
+
+			$ts[] = "ç";
+			$tn[] = 'c';
+
+			$ts[] = "ñ";
+			$tn[] = 'n';
+
+			$ts[] = "ø";
+			$tn[] = 'o';
+		}
+
+		foreach($ts as $k => $pattern){
+			$replace = $tn[$k];
+			$string = mb_ereg_replace($pattern, $replace, $string);
+		}
+
+		return $string;
 	}
 
 	static public function ucfirst($string, $e = 'utf-8') {
@@ -716,103 +750,5 @@ class EtuDev_Util_String {
 			return str_replace('&amp;', '&', @htmlspecialchars($mixed, ENT_QUOTES));
 		}
 	}
-
-
-	function replaceAccents($string) {
-		return str_replace(array('à',
-								 'á',
-								 'â',
-								 'ã',
-								 'ä',
-								 'è',
-								 'é',
-								 'ê',
-								 'ë',
-								 'ì',
-								 'í',
-								 'î',
-								 'ï',
-								 'ò',
-								 'ó',
-								 'ô',
-								 'õ',
-								 'ö',
-								 'ù',
-								 'ú',
-								 'û',
-								 'ü',
-								 'ý',
-								 'ÿ',
-								 'À',
-								 'Á',
-								 'Â',
-								 'Ã',
-								 'Ä',
-								 'È',
-								 'É',
-								 'Ê',
-								 'Ë',
-								 'Ì',
-								 'Í',
-								 'Î',
-								 'Ï',
-								 'Ò',
-								 'Ó',
-								 'Ô',
-								 'Õ',
-								 'Ö',
-								 'Ù',
-								 'Ú',
-								 'Û',
-								 'Ü',
-								 'Ý'), array('a',
-											 'a',
-											 'a',
-											 'a',
-											 'a',
-											 'e',
-											 'e',
-											 'e',
-											 'e',
-											 'i',
-											 'i',
-											 'i',
-											 'i',
-											 'o',
-											 'o',
-											 'o',
-											 'o',
-											 'o',
-											 'u',
-											 'u',
-											 'u',
-											 'u',
-											 'y',
-											 'y',
-											 'A',
-											 'A',
-											 'A',
-											 'A',
-											 'A',
-											 'E',
-											 'E',
-											 'E',
-											 'E',
-											 'I',
-											 'I',
-											 'I',
-											 'I',
-											 'O',
-											 'O',
-											 'O',
-											 'O',
-											 'O',
-											 'U',
-											 'U',
-											 'U',
-											 'U',
-											 'Y'), $string);
-	}
-
 
 }
