@@ -68,6 +68,7 @@ class EtuDev_Util_String {
 	static public function getRandomString($length, $filter = array()) {
 		$array = array_diff(array_merge(range(1, 9), range('A', 'Z')), $filter);
 		shuffle($array);
+
 		return implode('', array_slice($array, 0, $length));
 	}
 
@@ -106,6 +107,7 @@ class EtuDev_Util_String {
 			if ($repairHTML) {
 				$content = static::repairHTML($content);
 			}
+
 			return $content;
 		}
 
@@ -122,6 +124,7 @@ class EtuDev_Util_String {
 
 	static public function removeAllButNumbers($string, $allowPlus = false) {
 		$patron = $allowPlus ? '/[^0-9+]+/' : '/[^0-9]+/';
+
 		return preg_replace($patron, '', $string);
 	}
 
@@ -448,6 +451,7 @@ class EtuDev_Util_String {
 					  '&yuml;');
 		$str  = str_replace($html, $xml, $str);
 		$str  = str_ireplace($html, $xml, $str);
+
 		return $str;
 	}
 
@@ -460,6 +464,7 @@ class EtuDev_Util_String {
 
 		$string = mb_convert_case(mb_convert_case($str, MB_CASE_LOWER, 'UTF-8'), MB_CASE_TITLE, 'UTF-8');
 		$string = preg_replace_callback("/( [ a-zA-Z]{1}')([a-zA-Z0-9]{1})/s", create_function('$matches', 'return $matches[1].mb_convert_case($matches[2], MB_CASE_UPPER, "UTF-8");'), $string);
+
 		return $string;
 	}
 
@@ -487,6 +492,7 @@ class EtuDev_Util_String {
 					"/[ù-ü]/",
 					"/[ý-ÿ]/");
 		$tn = array("A", "AE", "C", "E", "I", "D", "N", "O", "X", "U", "Y", "a", "ae", "c", "e", "i", "d", "n", "o", "x", "u", "y");
+
 		return preg_replace($ts, $tn, $p);
 	}
 
@@ -499,6 +505,7 @@ class EtuDev_Util_String {
 		} else {
 			$string = ucfirst($string);
 		}
+
 		return $string;
 	}
 
@@ -516,6 +523,7 @@ class EtuDev_Util_String {
 		foreach ($sentences as $key => $sentence) {
 			$new_string .= ($key & 1) == 0 ? self::ucfirst(self::strtolower(trim($sentence))) : $sentence . ' ';
 		}
+
 		return trim($new_string);
 	}
 
@@ -530,6 +538,7 @@ class EtuDev_Util_String {
 	static public function removeBR($p, $removeChar = "\n") {
 		$returns = array("<br>", "<br />", "<br/>");
 		$c       = str_ireplace($returns, $removeChar, $p);
+
 		return $c;
 	}
 
@@ -557,6 +566,7 @@ class EtuDev_Util_String {
 			//short code of  the function once explained
 			//$str_encrypted_message .= chr((ord(substr($str_message, $position, 1))) ^ ((255+(($len_str_message+$position)+1)) % 255));
 		}
+
 		return $Str_Encrypted_Message;
 	}
 
@@ -567,6 +577,7 @@ class EtuDev_Util_String {
 		for ($i = 0; $i < $ntime; $i++) {
 			$ss = base64_encode($ss);
 		}
+
 		return $ss;
 	}
 
@@ -578,6 +589,7 @@ class EtuDev_Util_String {
 		for ($i = 0; $i < $ntime; $i++) {
 			$ss = base64_decode($ss);
 		}
+
 		return $ss;
 	}
 
@@ -633,9 +645,9 @@ class EtuDev_Util_String {
 
 	public static function contains($string, $substr, $case_sensitive = true) {
 		if ($case_sensitive) {
-			return (strpos($string, $substr) !== FALSE);
+			return (strpos($string, $substr) !== false);
 		} else {
-			return (stripos($string, $substr) !== FALSE);
+			return (stripos($string, $substr) !== false);
 		}
 	}
 
@@ -663,6 +675,7 @@ class EtuDev_Util_String {
 			$g .= $g;
 			$b .= $b;
 		}
+
 		return array('r' => hexdec($r), 'g' => hexdec($g), 'b' => hexdec($b));
 	}
 
@@ -671,27 +684,28 @@ class EtuDev_Util_String {
 		$nonSense = array(',', '.', '_', '#', '¿', '?', '¡', '!', '"');
 		$p        = null;
 		similar_text(str_replace($nonSense, '', self::strtolower($string1)), str_replace($nonSense, '', self::strtolower($string2)), $p);
+
 		return $p;
 	}
 
 
-	public static $repairHTMLTidyOptions = array('wrap' => 0,
-												 'doctype' => 'omit',
-												 'tidy-mark' => '0',
-												 'wrap-sections' => '0',
-												 'char-encoding' => 'utf8',
+	public static $repairHTMLTidyOptions = array('wrap'           => 0,
+												 'doctype'        => 'omit',
+												 'tidy-mark'      => '0',
+												 'wrap-sections'  => '0',
+												 'char-encoding'  => 'utf8',
 												 'input-encoding' => 'utf8',
 												 'show-body-only' => 1);
 
 	public static function repairHTML($string, $encoding = 'utf8') {
 		$tidy = new tidy();
+
 		return $tidy->repairString($string, self::$repairHTMLTidyOptions, $encoding);
 	}
 
 	public static function stringContainsUrl($x) {
 		return (preg_match('#(http|https|ftp)://([A-Z0-9][A-Z0-9_-]*(?:.[A-Z0-9][A-Z0-9_-]*)+):?(d+)?/?#i', $x)) > 0;
 	}
-
 
 
 	static public function cleanFormOutput($mixed) {
@@ -702,4 +716,103 @@ class EtuDev_Util_String {
 			return str_replace('&amp;', '&', @htmlspecialchars($mixed, ENT_QUOTES));
 		}
 	}
+
+
+	function replaceAccents($string) {
+		return str_replace(array('à',
+								 'á',
+								 'â',
+								 'ã',
+								 'ä',
+								 'è',
+								 'é',
+								 'ê',
+								 'ë',
+								 'ì',
+								 'í',
+								 'î',
+								 'ï',
+								 'ò',
+								 'ó',
+								 'ô',
+								 'õ',
+								 'ö',
+								 'ù',
+								 'ú',
+								 'û',
+								 'ü',
+								 'ý',
+								 'ÿ',
+								 'À',
+								 'Á',
+								 'Â',
+								 'Ã',
+								 'Ä',
+								 'È',
+								 'É',
+								 'Ê',
+								 'Ë',
+								 'Ì',
+								 'Í',
+								 'Î',
+								 'Ï',
+								 'Ò',
+								 'Ó',
+								 'Ô',
+								 'Õ',
+								 'Ö',
+								 'Ù',
+								 'Ú',
+								 'Û',
+								 'Ü',
+								 'Ý'), array('a',
+											 'a',
+											 'a',
+											 'a',
+											 'a',
+											 'e',
+											 'e',
+											 'e',
+											 'e',
+											 'i',
+											 'i',
+											 'i',
+											 'i',
+											 'o',
+											 'o',
+											 'o',
+											 'o',
+											 'o',
+											 'u',
+											 'u',
+											 'u',
+											 'u',
+											 'y',
+											 'y',
+											 'A',
+											 'A',
+											 'A',
+											 'A',
+											 'A',
+											 'E',
+											 'E',
+											 'E',
+											 'E',
+											 'I',
+											 'I',
+											 'I',
+											 'I',
+											 'O',
+											 'O',
+											 'O',
+											 'O',
+											 'O',
+											 'U',
+											 'U',
+											 'U',
+											 'U',
+											 'Y'), $string);
+	}
+
+
 }
