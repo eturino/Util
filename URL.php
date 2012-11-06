@@ -25,7 +25,7 @@ class EtuDev_Util_URL {
 		if (isset($_SERVER) && isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
 			$url .= 's';
 		}
-		$url .= '://' . $_SERVER['SERVER_NAME'];
+		$url .= '://' . ($_SERVER['HTTP_HOST'] ?: $_SERVER['SERVER_NAME']);
 		if (isset($_SERVER) && isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') {
 			$url .= ':' . $_SERVER['SERVER_PORT'];
 		}
