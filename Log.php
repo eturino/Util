@@ -2,19 +2,11 @@
 
 class EtuDev_Util_Log {
 
-
 	const MODULE_WEB           = 'app';
-	const MODULE_API_SERVER    = 'api';
-	const MODULE_API_CALLS     = 'calls';
-	const MODULE_LANG          = 'lang';
+	const MODULE_DATA          = 'data';
 	const MODULE_404           = '404';
 	const MODULE_DB            = 'db';
 	const MODULE_REDIRECT      = 'redirect';
-	const MODULE_SMS_API       = 'sms';
-	const MODULE_SUR           = 'sur';
-	const MODULE_DIALOGA_CALLS = 'dcall';
-	const MODULE_DATA          = 'data';
-
 
 	const FORCED = -1; // FORCED to be logged: system is unusable
 	const EMERG = Zend_Log::EMERG; // Emergency: system is unusable
