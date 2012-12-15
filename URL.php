@@ -20,15 +20,30 @@ class EtuDev_Util_URL {
 		return $url;
 	}
 
-	static public function get_page_url($querystring = true) {
+	static public function get_page_url($querystring = true, $servername_over_http_host = true) {
 		$url = 'http';
 		if (isset($_SERVER) && isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
 			$url .= 's';
 		}
-		$url .= '://' . ($_SERVER['HTTP_HOST'] ?: $_SERVER['SERVER_NAME']);
-		if (isset($_SERVER) && isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') {
-			$url .= ':' . $_SERVER['SERVER_PORT'];
+
+		$url .= '://';
+
+		$host = '';
+
+		if (isset($_SERVER)) {
+			if ($servername_over_http_host) {
+				$host = $_SERVER['SERVER_NAME'] ? : $_SERVER['HTTP_HOST'];
+			} else {
+				$host = $_SERVER['HTTP_HOST'] ? : $_SERVER['SERVER_NAME'];
+			}
+
+			if (!EtuDev_Util_String::contains($host, ':') && isset($_SERVER['SERVER_PORT']) && trim($_SERVER['SERVER_PORT']) != '80') {
+				$host .= ':' . trim($_SERVER['SERVER_PORT']);
+			}
 		}
+
+		$url .= $host;
+
 		if ($querystring) {
 			$url .= $_SERVER["REQUEST_URI"];
 		} else {
