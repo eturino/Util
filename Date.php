@@ -135,6 +135,15 @@ class EtuDev_Util_Date {
 	}
 
 	/**
+	 * @param bool $with_time
+	 *
+	 * @return string
+	 */
+	static public function getZeroDate($with_time = true) {
+		return $with_time ? '0000-00-00 00:00:00' : '0000-00-00';
+	}
+
+	/**
 	 * @static
 	 *
 	 * @param string                   $date Date in Y-m-d format
@@ -308,12 +317,29 @@ class EtuDev_Util_Date {
 	static public function dateFormatToStrftime($dateFormat) {
 
 		$caracs = array( // Day - no strf eq : S
-			'd' => '%d', 'D' => '%a', 'j' => '%e', 'l' => '%A', 'N' => '%u', 'w' => '%w', 'z' => '%j', // Week - no date eq : %U, %W
+			'd' => '%d',
+			'D' => '%a',
+			'j' => '%e',
+			'l' => '%A',
+			'N' => '%u',
+			'w' => '%w',
+			'z' => '%j', // Week - no date eq : %U, %W
 			'W' => '%V', // Month - no strf eq : n, t
-			'F' => '%B', 'm' => '%m', 'M' => '%b', // Year - no strf eq : L; no date eq : %C, %g
-			'o' => '%G', 'Y' => '%Y', 'y' => '%y', // Time - no strf eq : B, G, u; no date eq : %r, %R, %T, %X
-			'a' => '%P', 'A' => '%p', 'g' => '%l', 'h' => '%I', 'H' => '%H', 'i' => '%M', 's' => '%S', // Timezone - no strf eq : e, I, P, Z
-			'O' => '%z', 'T' => '%Z', // Full Date / Time - no strf eq : c, r; no date eq : %c, %D, %F, %x
+			'F' => '%B',
+			'm' => '%m',
+			'M' => '%b', // Year - no strf eq : L; no date eq : %C, %g
+			'o' => '%G',
+			'Y' => '%Y',
+			'y' => '%y', // Time - no strf eq : B, G, u; no date eq : %r, %R, %T, %X
+			'a' => '%P',
+			'A' => '%p',
+			'g' => '%l',
+			'h' => '%I',
+			'H' => '%H',
+			'i' => '%M',
+			's' => '%S', // Timezone - no strf eq : e, I, P, Z
+			'O' => '%z',
+			'T' => '%Z', // Full Date / Time - no strf eq : c, r; no date eq : %c, %D, %F, %x
 			'U' => '%s');
 
 		return strtr((string) $dateFormat, $caracs);
