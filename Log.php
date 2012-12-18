@@ -37,7 +37,7 @@ class EtuDev_Util_Log {
 			$message .= '. ';
 		}
 		$message .= 'URL pedida:' . EtuDev_Util_URL::get_page_url() . ', GET:' . json_encode($_GET);
-		return self::logCustom($_SERVER['REQUEST_URI'], $message, self::ERR, self::MODULE_404);
+		return self::log($_SERVER['REQUEST_URI'], $message, self::ERR, self::MODULE_404);
 	}
 
 	static public function logException(Exception $exception, $caller = null, $module = null) {
