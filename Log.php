@@ -18,14 +18,14 @@ class EtuDev_Util_Log {
 	const INFO = Zend_Log::INFO; // Informational: informational messages
 	const DEBUG = Zend_Log::DEBUG; // Debug: debug messages
 
-	static protected $pns = array(self::EMERG => 'EMERG',
-								  self::ALERT => 'ALERT',
-								  self::CRIT => 'CRIT',
-								  self::ERR => 'ERR',
-								  self::WARN => 'WARN',
+	static protected $pns = array(self::EMERG  => 'EMERG',
+								  self::ALERT  => 'ALERT',
+								  self::CRIT   => 'CRIT',
+								  self::ERR    => 'ERR',
+								  self::WARN   => 'WARN',
 								  self::NOTICE => 'NOTICE',
-								  self::INFO => 'INFO',
-								  self::DEBUG => 'DEBUG');
+								  self::INFO   => 'INFO',
+								  self::DEBUG  => 'DEBUG');
 
 	static protected function getLevelName($level) {
 		return @static::$pns[$level] ? : $level;
@@ -37,7 +37,7 @@ class EtuDev_Util_Log {
 			$message .= '. ';
 		}
 		$message .= 'URL pedida:' . EtuDev_Util_URL::get_page_url() . ', GET:' . json_encode($_GET);
-		return self::log($_SERVER['REQUEST_URI'], $message, self::ERR, self::MODULE_404);
+		return self::log(@$_SERVER['REQUEST_URI'] ? : @$_SERVER['SCRIPT_NAME'], $message, self::ERR, self::MODULE_404);
 	}
 
 	static public function logException(Exception $exception, $caller = null, $module = null) {
@@ -86,9 +86,9 @@ class EtuDev_Util_Log {
 			$string .= $message;
 
 			$logger->setEventItem('caller', $caller);
-			$logger->setEventItem('requestUri', $_SERVER['REQUEST_URI']);
-			$logger->setEventItem('visitorHost', @gethostbyaddr($_SERVER['REMOTE_ADDR']));
-			$logger->setEventItem('visitorIp', $_SERVER['REMOTE_ADDR']);
+			$logger->setEventItem('requestUri', @$_SERVER['REQUEST_URI']);
+			$logger->setEventItem('visitorHost', @gethostbyaddr(@$_SERVER['REMOTE_ADDR']));
+			$logger->setEventItem('visitorIp', @$_SERVER['REMOTE_ADDR']);
 			$logger->setEventItem('timestamp', date('d-m-Y H:i:s', time()));
 
 			$logger->log($string, $level);
@@ -118,8 +118,8 @@ class EtuDev_Util_Log {
 
 		$string .= "\n" . $message;
 
-		$requestUri = $_SERVER['REQUEST_URI'];
-		$visitorIp  = $_SERVER['REMOTE_ADDR'];
+		$requestUri = @$_SERVER['REQUEST_URI'];
+		$visitorIp  = @$_SERVER['REMOTE_ADDR'];
 		$timestamp  = date('d-m-Y H:i:s', time()) . ' UTC';
 
 		$priorityName = static::getLevelName($level);
