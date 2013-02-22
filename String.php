@@ -487,7 +487,7 @@ class EtuDev_Util_String {
 
 		$tn = array("A", "E", "I", "O", "U", "Y", "a", "e", "i", "d", "o", "/", ".", "u", "y");
 
-		if(!$acceptGSMValidNotAccents){
+		if (!$acceptGSMValidNotAccents) {
 			$ts[] = "Æ";
 			$tn[] = 'AE';
 
@@ -522,9 +522,9 @@ class EtuDev_Util_String {
 			$tn[] = 'o';
 		}
 
-		foreach($ts as $k => $pattern){
+		foreach ($ts as $k => $pattern) {
 			$replace = $tn[$k];
-			$string = mb_ereg_replace($pattern, $replace, $string);
+			$string  = mb_ereg_replace($pattern, $replace, $string);
 		}
 
 		return $string;
