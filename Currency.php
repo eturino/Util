@@ -31,12 +31,33 @@ class EtuDev_Util_Currency {
 	protected $timestamp = null;
 
 	/**
+	 * @var bool
+	 */
+	protected $lookup_for_rates_if_needed = true;
+
+	/**
 	 * @param string $api_key
 	 * @param int    $seconds_ttl
 	 */
 	public function __construct($api_key, $seconds_ttl = 3600) {
 		$this->api_key     = $api_key;
 		$this->seconds_ttl = $seconds_ttl;
+	}
+
+	/**
+	 * @return $this
+	 */
+	public function disableLookupForRates() {
+		$this->lookup_for_rates_if_needed = false;
+		return $this;
+	}
+
+	/**
+	 * @return $this
+	 */
+	public function enableLookupForRates() {
+		$this->lookup_for_rates_if_needed = true;
+		return $this;
 	}
 
 	/**
@@ -60,12 +81,27 @@ class EtuDev_Util_Currency {
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function needRetrieveRates() {
+		return $this->lookup_for_rates_if_needed && (!$this->rates || $this->isRatesTooOld());
+	}
+
+	/**
+	 * @return $this
+	 */
+	public function loadRates() {
+		$this->load();
+		return $this;
+	}
+
+	/**
 	 * if there are no rates or if they are too old, load()
 	 *
 	 * @return EtuDev_Util_Currency
 	 */
 	public function retrieveRatesIfNeeded() {
-		if (!$this->rates || $this->isRatesTooOld()) {
+		if ($this->needRetrieveRates()) {
 			$this->load();
 		}
 		return $this;
@@ -114,8 +150,8 @@ class EtuDev_Util_Currency {
 	protected function load() {
 		$changes = $this->doRequest('latest.json');
 		if ($changes) {
-			$this->rates     = (array) $changes->rates;
-			$this->timestamp = (int) $changes->timestamp;
+			$this->rates     = $changes['rates'];
+			$this->timestamp = (int) $changes['timestamp'];
 		}
 	}
 
@@ -124,11 +160,12 @@ class EtuDev_Util_Currency {
 
 		$ch = curl_init("http://openexchangerates.org/api/{$file}?app_id={$appId}");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
 
 		$json = curl_exec($ch);
 		curl_close($ch);
 
-		return json_decode($json);
+		return json_decode($json, true);
 	}
 
 	/**
