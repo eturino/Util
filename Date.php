@@ -131,6 +131,9 @@ class EtuDev_Util_Date {
 	}
 
 	static public function isZeroDate($date_string) {
+		if ($date_string instanceof DateTime) {
+			return $date_string->format('Y-m-d') <= '0000-00-00';
+		}
 		return (!$date_string || $date_string == '0000-00-00' || $date_string == '0000-00-00 00:00:00');
 	}
 
@@ -233,7 +236,13 @@ class EtuDev_Util_Date {
 		}
 		// If we have a zero date, properly replace its values since strtotime will fail on this
 		if (static::isZeroDate($date_string)) {
-			return str_replace(array(' ', 'm', 'd', 'Y'), array(static::getFormatInputSeparator(), '00', '00', '0000'), static::getFormatInput());
+			return str_replace(array(' ',
+									 'm',
+									 'd',
+									 'Y'), array(static::getFormatInputSeparator(),
+												 '00',
+												 '00',
+												 '0000'), static::getFormatInput());
 		} else {
 			return date(str_replace('-', static::getFormatInputSeparator(), static::getFormatInput()), strtotime($date_string));
 		}
